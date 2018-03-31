@@ -103,6 +103,7 @@ public class HandWriteView extends View {
         if (mBitmap != null) {
             canvas.drawBitmap(mBitmap, 0, 0, null);
         }
+
     }
 
     private void addPoint(TimedPoint point) {

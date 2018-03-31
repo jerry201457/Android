@@ -2,6 +2,7 @@ package com.sinotech.report.main.draw;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
@@ -24,7 +25,7 @@ public class MainActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getBaseContext(), DrawActivity.class);
+                Intent intent = new Intent(getBaseContext(), LineActivity.class);
                 startActivityForResult(intent, 10);
             }
         });
@@ -41,8 +42,10 @@ public class MainActivity extends AppCompatActivity {
         switch (requestCode) {
             case 10:
                 if (resultCode == -1) {
-                    Glide.with(this).load(DrawActivity.path1 + ".sign").
-                            skipMemoryCache(true).diskCacheStrategy(DiskCacheStrategy.NONE).into(mImageView);
+                    BitmapFactory.Options options = new BitmapFactory.Options();
+                    options.inSampleSize = 2;
+                    Bitmap bm = BitmapFactory.decodeFile(DrawActivity.path1, options);
+                    mImageView.setImageBitmap(bm);
                 }
                 break;
         }
