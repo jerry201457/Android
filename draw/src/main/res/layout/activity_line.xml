@@ -5,9 +5,8 @@
     android:layout_height="match_parent"
     tools:context=".LineActivity">
 
-    <com.sinotech.report.main.draw.LinePathView
+    <FrameLayout
         android:id="@+id/line_linePathView"
         android:layout_width="match_parent"
-        android:background="#fff909"
         android:layout_height="match_parent" />
 </LinearLayout>
