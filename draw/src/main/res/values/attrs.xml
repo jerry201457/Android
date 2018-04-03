@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="HandWriteView">
-        <attr name="paintColor" format="color"/>
-        <attr name="paintMaxWidth" format="dimension"/>
-        <attr name="paintMinWidth" format="dimension"/>
+    <declare-styleable name="LinePathView">
+        <attr name="paintColor" format="color" />
+        <attr name="paintWidth" format="dimension" />
     </declare-styleable>
 </resources>

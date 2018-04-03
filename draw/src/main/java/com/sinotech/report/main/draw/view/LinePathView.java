@@ -1,19 +1,27 @@
-package com.sinotech.report.main.draw;
+package com.sinotech.report.main.draw.view;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.os.Build;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.sinotech.report.main.draw.R;
+
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 
 public class LinePathView extends View {
     private final String TAG = LinePathView.class.getName();
@@ -23,52 +31,47 @@ public class LinePathView extends View {
     private Path mPath = new Path();
     private Canvas mCanvas;
     private Bitmap mBitmap;
-    private List<Path> mPathList = new ArrayList<>();
+    private int mPaintColor;
+    private float mPaintWidth;
 
     public LinePathView(Context context) {
         super(context);
-        init(context);
+        init(context, null);
     }
 
     public LinePathView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        init(context);
+        init(context, attrs);
     }
 
     public LinePathView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(context);
+        init(context, attrs);
     }
 
-    private void init(Context context) {
-        mPath = new Path();
-        mPaint = new Paint();
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    public LinePathView(Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+        init(context, attrs);
+    }
+
+    private void init(Context context, AttributeSet attrs) {
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.LinePathView);
+        mPaintWidth = typedArray.getDimensionPixelSize(R.styleable.LinePathView_paintWidth, 20);
+        mPaintColor = typedArray.getColor(R.styleable.LinePathView_paintColor, Color.RED);
         //抗锯齿
         mPaint.setAntiAlias(true);
         //设置样式
         mPaint.setStyle(Paint.Style.STROKE);
-        mPaint.setStrokeWidth(18);
-        mPaint.setColor(Color.RED);
+        mPaint.setStrokeWidth(mPaintWidth);
+        mPaint.setColor(mPaintColor);
         mPaint.setStrokeJoin(Paint.Join.ROUND);
         mPaint.setTextSize(25f);
         mBitmap = Bitmap.createBitmap(1000, 2000, Bitmap.Config.ARGB_8888);
         mCanvas = new Canvas(mBitmap);
         mCanvas.drawColor(Color.WHITE);
-        testDraw();
-
-
     }
 
-    private void testDraw() {
-        if (mPaint == null) {
-            Log.i(TAG, "---paint is null");
-        }
-        mPath.lineTo(100, 200);
-        mPath.moveTo(200, 300);
-        mPath.lineTo(300, 400);
-        mPath.addCircle(300, 300, 60, Path.Direction.CCW);
-        mCanvas.drawPath(mPath, mPaint);
-    }
 
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
@@ -77,35 +80,24 @@ public class LinePathView extends View {
         Log.i(TAG, "---width:" + getWidth() + "---height:" + getHeight());
         mCanvas = new Canvas(mBitmap);
         mCanvas.drawColor(Color.WHITE);
+        if (mBitmap != null) {
+            mCanvas.drawBitmap(mBitmap, 0, 0, mPaint);
+        }
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        float x = event.getX();
-        float y = event.getY();
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                Log.i(TAG, "---x:" + event.getX() + "---y:" + event.getX());
-                //重置路径
-//                mPath.reset();
-                //记录轨迹
-//                touchDown(event);
-                mX = x;
-                mY = y;
-                mPath.moveTo(x, y);
+                touchDown(event);
                 break;
             case MotionEvent.ACTION_MOVE:
-                Log.i(TAG, "---x:" + event.getX() + "---y:" + event.getX());
-//                touchMove(event);
-                mPath.lineTo(x, y);
-                mX = x;
-                mY = y;
+                touchMove(event);
                 break;
             case MotionEvent.ACTION_UP:
-                Log.i(TAG, "---x:" + event.getX() + "---y:" + event.getX());
                 //把记录的轨迹画出
-                mPath.lineTo(x, y);
-//                mPath.reset();
+                mCanvas.drawPath(mPath, mPaint);
+                mPath.reset();
                 break;
             default:
                 break;
@@ -118,10 +110,10 @@ public class LinePathView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-//        mCanvas.drawPath(mPath, mPaint);
-        mCanvas.drawBitmap(mBitmap, 0, 0, null);
-        mCanvas.drawPath(mPath, mPaint);
-
+        if (mBitmap != null) {
+            canvas.drawBitmap(mBitmap, 0, 0, mPaint);
+        }
+        canvas.drawPath(mPath, mPaint);
     }
 
     /**
@@ -130,10 +122,11 @@ public class LinePathView extends View {
      * @param event 触摸事件
      */
     private void touchDown(MotionEvent event) {
+        //重置路径
+        mPath.reset();
         mX = event.getX();
         mY = event.getY();
         mPath.moveTo(mX, mY);
-        Log.i(TAG, "---x:" + mX + "---y:" + mY);
     }
 
     /**
@@ -146,7 +139,6 @@ public class LinePathView extends View {
         final float y = event.getY();
         final float startX = mX;
         final float startY = mY;
-        Log.i(TAG, "---x:" + mX + "---y:" + mY);
         //移动距离取绝对值
         final float dx = Math.abs(x - startX);
         final float dy = Math.abs(y - startY);
@@ -157,4 +149,43 @@ public class LinePathView extends View {
             mY = y;
         }
     }
+
+    /**
+     * 把画布保存到路径下的文件
+     *
+     * @param path 指定路径
+     */
+    public void save(String path) {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        mBitmap.compress(Bitmap.CompressFormat.PNG, 100, bos);
+        byte[] buffer = bos.toByteArray();
+        if (buffer != null) {
+            File file = new File(path);
+            if (file.exists()) {
+                file.delete();
+            }
+            OutputStream outputStream = null;
+            try {
+                outputStream = new FileOutputStream(file);
+                outputStream.write(buffer);
+                outputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /**
+     * 清除画布
+     */
+    public void clear() {
+        if (mCanvas != null) {
+            mPaint.setColor(mPaintColor);
+            mPaint.setStrokeWidth(mPaintWidth);
+            mCanvas.drawColor(Color.WHITE);
+            invalidate();
+        }
+    }
+
+
 }
