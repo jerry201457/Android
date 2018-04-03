@@ -26,6 +26,7 @@ public class SignActivity extends AppCompatActivity implements View.OnClickListe
         mClearBtn = findViewById(R.id.sign_clearBtn);
         mSaveBtn.setOnClickListener(this);
         mClearBtn.setOnClickListener(this);
+        mPathView.delete(PATH);
     }
 
 

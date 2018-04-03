@@ -156,14 +156,15 @@ public class LinePathView extends View {
      * @param path 指定路径
      */
     public void save(String path) {
+        File file = new File(path);
+        if (file.exists()) {
+            boolean delete = file.delete();
+            Log.i(TAG, "---is delete:" + delete);
+        }
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         mBitmap.compress(Bitmap.CompressFormat.PNG, 100, bos);
         byte[] buffer = bos.toByteArray();
         if (buffer != null) {
-            File file = new File(path);
-            if (file.exists()) {
-                file.delete();
-            }
             OutputStream outputStream = null;
             try {
                 outputStream = new FileOutputStream(file);
@@ -172,6 +173,13 @@ public class LinePathView extends View {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public void delete(String path) {
+        File file = new File(path);
+        if (file.exists()) {
+            boolean delete = file.delete();
         }
     }
 
