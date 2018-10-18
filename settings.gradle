@@ -1,1 +1,1 @@
-include ':app', ':rxjava', ':zxing', ':libcore', ':draw', ':picture'
+include ':app', ':rxjava', ':zxing', ':libcore', ':draw', ':picture', ':task'
