@@ -23,34 +23,64 @@ import com.bin.david.form.data.style.FontStyle;
 import com.bin.david.form.data.table.PageTableData;
 import com.bin.david.form.listener.OnColumnClickListener;
 import com.bin.david.form.utils.DensityUtils;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.constant.SpinnerStyle;
+import com.scwang.smartrefresh.layout.footer.BallPulseFooter;
+import com.scwang.smartrefresh.layout.header.BezierRadarHeader;
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 public class TableActivity extends AppCompatActivity {
     private SmartTable<Form> smartTable;
+//    private RefreshLayout mRefreshLayout;
     private ImageView lastIv;
     private ImageView nextIv;
     private TextView currentPageTv;
+    /**
+     * 本地当前总条数
+     */
+    private int mTotalLocal = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_table);
         smartTable = findViewById(R.id.table);
+//        mRefreshLayout = findViewById(R.id.table_refreshLayout);
         lastIv = findViewById(R.id.last_iv);
         nextIv = findViewById(R.id.next_iv);
         currentPageTv = findViewById(R.id.currentPage_tv);
+        //设置 Header 为 贝塞尔雷达 样式
+//        mRefreshLayout.setRefreshHeader(new BezierRadarHeader(this).setEnableHorizontalDrag(true));
+//        //设置 Footer 为 球脉冲 样式
+//        mRefreshLayout.setRefreshFooter(new BallPulseFooter(this).setSpinnerStyle(SpinnerStyle.Scale));
+
         try {
-            initTable(smartTable);
+            initTable(smartTable, getList(22));
+//            mRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
+//                @Override
+//                public void onRefresh(RefreshLayout refreshLayout) {
+//                    initTable(smartTable, getList(22));
+//                    refreshLayout.finishRefresh();
+//                }
+//            });
+//            mRefreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
+//                @Override
+//                public void onLoadMore(RefreshLayout refreshLayout) {
+//                    smartTable.addData(getList(3), true);
+//                    refreshLayout.finishLoadMore(1000);
+//                }
+//            });
         } catch (Exception e) {
             e.printStackTrace();
         }
 
     }
 
-    private void initTable(final SmartTable smartTable) {
+    private void initTable(final SmartTable smartTable, final List<Form> formList) {
         final Column<String> columnBillDeptName = new Column<String>("开票部门", "column1");
         Column<String> columnOrderCount = new Column<String>("运单数量", "column2");
         Column<String> columnItemQty = new Column<String>("件数", "column3");
@@ -60,7 +90,7 @@ public class TableActivity extends AppCompatActivity {
         Column<String> column7 = new Column<String>("现付月结运费", "column7");
         Column<String> column8 = new Column<String>("提付月结运费", "column8");
         Column<String> column9 = new Column<String>("回单运费", "column9");
-        final PageTableData tableData = new PageTableData("收货统计", getList(), columnBillDeptName, columnOrderCount, columnItemQty,
+        final PageTableData tableData = new PageTableData("收货统计", formList, columnBillDeptName, columnOrderCount, columnItemQty,
                 column4, column5, column6, column7, column8, column9);
         //设置文字字体大小
         FontStyle.setDefaultTextSpSize(getContext(), 16);
@@ -123,7 +153,7 @@ public class TableActivity extends AppCompatActivity {
 
             @Override
             public String[] format(Column column, int position) {
-                Form form = getList().get(position);
+                Form form = formList.get(position);
                 return new String[]{"开票部门:" + form.getColumn1(), "运单数量:" + form.getColumn2()};
             }
         };
@@ -167,7 +197,7 @@ public class TableActivity extends AppCompatActivity {
             public String format(Integer integer) {
                 if (integer == 1) {
                     return "";
-                } else if (integer == tableData.getPageSize()+2) {
+                } else if (integer == tableData.getPageSize() + 2) {
                     return "合计";
                 } else {
                     return String.valueOf(integer - 1);
@@ -198,11 +228,11 @@ public class TableActivity extends AppCompatActivity {
         smartTable.setTableData(tableData);
     }
 
-    private List<Form> getList() {
+    private List<Form> getList(int size) {
         List<Form> formList = new ArrayList<>();
         String[] billDeptNames = {"测试分理处", "南阳", "洛阳", "新乡", "漯河", "周口"};
-        for (int i = 0; i < 44; i++) {
-            Form form = new Form(billDeptNames[(int) (Math.random() * 6)], (int) (Math.random() * 100) + "", (int) (Math.random() * 300) + "");
+        for (int i = 0; i < size; i++) {
+            Form form = new Form(billDeptNames[(int) (Math.random() * 6)], (int) (Math.random() * 100), (int) (Math.random() * 300));
             formList.add(form);
         }
 //        Collections.sort(formList, new Comparator<Form>() {
