@@ -15,6 +15,7 @@ import com.bin.david.form.core.TableConfig;
 import com.bin.david.form.data.CellInfo;
 import com.bin.david.form.data.column.Column;
 import com.bin.david.form.data.column.ColumnInfo;
+import com.bin.david.form.data.format.bg.BaseBackgroundFormat;
 import com.bin.david.form.data.format.bg.BaseCellBackgroundFormat;
 import com.bin.david.form.data.format.sequence.BaseSequenceFormat;
 import com.bin.david.form.data.format.tip.MultiLineBubbleTip;
@@ -23,19 +24,13 @@ import com.bin.david.form.data.style.FontStyle;
 import com.bin.david.form.data.table.PageTableData;
 import com.bin.david.form.listener.OnColumnClickListener;
 import com.bin.david.form.utils.DensityUtils;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.constant.SpinnerStyle;
-import com.scwang.smartrefresh.layout.footer.BallPulseFooter;
-import com.scwang.smartrefresh.layout.header.BezierRadarHeader;
-import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class TableActivity extends AppCompatActivity {
     private SmartTable<Form> smartTable;
-//    private RefreshLayout mRefreshLayout;
+    //    private RefreshLayout mRefreshLayout;
     private ImageView lastIv;
     private ImageView nextIv;
     private TextView currentPageTv;
@@ -116,16 +111,6 @@ public class TableActivity extends AppCompatActivity {
             }
         });
 
-        //设置背景色
-        smartTable.getConfig().setContentCellBackgroundFormat(new BaseCellBackgroundFormat<CellInfo>() {
-            @Override
-            public int getBackGroundColor(CellInfo cellInfo) {
-                if (cellInfo.row % 2 == 0) {
-                    return ContextCompat.getColor(getContext(), R.color.color_gray);
-                }
-                return TableConfig.INVALID_COLOR;
-            }
-        });
         //固定列
         columnBillDeptName.setFixed(true);
         //缩放
@@ -195,15 +180,30 @@ public class TableActivity extends AppCompatActivity {
         smartTable.getConfig().setYSequenceFormat(new BaseSequenceFormat() {
             @Override
             public String format(Integer integer) {
-                if (integer == 1) {
-                    return "";
-                } else if (integer == tableData.getPageSize() + 2) {
-                    return "合计";
-                } else {
-                    return String.valueOf(integer - 1);
-                }
+                return String.valueOf(integer);
             }
         });
+        //设置序列背景色
+        TableConfig config = smartTable.getConfig();
+        config.setYSequenceBackground(new BaseBackgroundFormat(ContextCompat.getColor(getContext(), R.color.color_y_sequence)));
+        config.setXSequenceBackground(new BaseBackgroundFormat(ContextCompat.getColor(getContext(), R.color.color_y_sequence)));
+        config.setLeftAndTopBackgroundColor(ContextCompat.getColor(getContext(),R.color.color_red));
+        //设置网格线颜色
+        config.getContentGridStyle().setColor(ContextCompat.getColor(getContext(), R.color.color_white));
+        //设置背景色
+        config.setContentCellBackgroundFormat(new BaseCellBackgroundFormat<CellInfo>() {
+            @Override
+            public int getBackGroundColor(CellInfo cellInfo) {
+                if (cellInfo.row % 2 == 0) {
+                    return ContextCompat.getColor(getContext(), R.color.color_gray);
+                }
+                return TableConfig.INVALID_COLOR;
+            }
+        });
+        //列标题背景色设置
+        config.setColumnTitleBackground(new BaseBackgroundFormat(ContextCompat.getColor(getContext(), R.color.color_dark)));
+        //列标题字体样式
+        config.setColumnTitleStyle(new FontStyle(DensityUtils.dp2px(getContext(), 18), ContextCompat.getColor(getContext(), R.color.color_white)));
         //设置页数
         tableData.setPageSize(20);
         lastIv.setOnClickListener(new View.OnClickListener() {
