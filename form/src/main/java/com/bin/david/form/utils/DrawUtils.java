@@ -8,6 +8,7 @@ import android.graphics.NinePatch;
 import android.graphics.Paint;
 import android.graphics.PointF;
 import android.graphics.Rect;
+import android.util.Log;
 
 import com.bin.david.form.core.TableConfig;
 import com.bin.david.form.data.style.FontStyle;
@@ -122,6 +123,7 @@ public class DrawUtils {
      * @param rect
      */
     public static void drawMultiText(Canvas canvas,Paint paint,Rect rect,String[] values){
+        Log.i(DrawUtils.class.getName(),"multi--value:"+values[0]+"--left:"+rect.left+"--top:"+rect.top);
         for(int i =0;i <values.length;i++) {
             int centerY = (int) ((rect.bottom + rect.top) / 2+ (values.length/2f-i-0.5)*getTextHeight(paint));
             canvas.drawText(values[values.length-i-1], DrawUtils.getTextCenterX(rect.left, rect.right, paint),
@@ -137,6 +139,7 @@ public class DrawUtils {
      * @param value
      */
     public static void drawSingleText(Canvas canvas,Paint paint,Rect rect,String value){
+        Log.i(DrawUtils.class.getName(),"signle--value:"+value+"--left:"+rect.left+"--top:"+rect.top);
         canvas.drawText(value, DrawUtils.getTextCenterX(rect.left, rect.right, paint),
                 DrawUtils.getTextCenterY(rect.centerY(), paint), paint);
     }

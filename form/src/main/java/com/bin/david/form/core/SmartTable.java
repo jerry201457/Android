@@ -7,6 +7,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -16,16 +17,17 @@ import com.bin.david.form.component.TableProvider;
 import com.bin.david.form.component.TableTitle;
 import com.bin.david.form.component.XSequence;
 import com.bin.david.form.component.YSequence;
-import com.bin.david.form.data.column.Column;
-import com.bin.david.form.data.table.PageTableData;
-import com.bin.david.form.data.table.TableData;
 import com.bin.david.form.data.TableInfo;
+import com.bin.david.form.data.column.Column;
 import com.bin.david.form.data.format.selected.ISelectFormat;
 import com.bin.david.form.data.style.FontStyle;
+import com.bin.david.form.data.table.PageTableData;
+import com.bin.david.form.data.table.TableData;
 import com.bin.david.form.listener.OnColumnClickListener;
 import com.bin.david.form.listener.OnTableChangeListener;
 import com.bin.david.form.matrix.MatrixHelper;
 import com.bin.david.form.utils.DensityUtils;
+import com.bin.david.form.utils.LogUtil;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -118,9 +120,10 @@ public class SmartTable<T> extends View implements OnTableChangeListener {
             if (tableData != null) {
                 Rect rect = tableData.getTableInfo().getTableRect();
                 if (rect != null) {
-                    if (config.isShowTableTitle()) {
-                        measurer.measureTableTitle(tableData, tableTitle, showRect);
-                    }
+                    //测量表标题
+                    Log.i(SmartTable.class.getName(), "--before show rect left:" + showRect.left + "--top:" + showRect.top + "--right:" + showRect.right + "--bottom:" + showRect.bottom);
+                    measurer.measureTableTitle(tableData, tableTitle, showRect);
+                    Log.i(SmartTable.class.getName(), "--after show rect left:" + showRect.left + "--top:" + showRect.top + "--right:" + showRect.right + "--bottom:" + showRect.bottom);
                     tableRect.set(rect);
                     Rect scaleRect = matrixHelper.getZoomProviderRect(showRect, tableRect,
                             tableData.getTableInfo());
@@ -399,6 +402,7 @@ public class SmartTable<T> extends View implements OnTableChangeListener {
     @Override
     public void onTableChanged(float scale, float translateX, float translateY) {
         if (tableData != null) {
+            LogUtil.i("onTableChanged");
             config.setZoom(scale);
             tableData.getTableInfo().setZoom(scale);
             invalidate();

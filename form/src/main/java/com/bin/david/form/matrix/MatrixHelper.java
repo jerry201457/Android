@@ -22,6 +22,7 @@ import com.bin.david.form.data.TableInfo;
 import com.bin.david.form.listener.Observable;
 import com.bin.david.form.listener.OnTableChangeListener;
 import com.bin.david.form.listener.TableClickObserver;
+import com.bin.david.form.utils.LogUtil;
 
 import java.util.List;
 
@@ -127,6 +128,7 @@ public class MatrixHelper extends Observable<TableClickObserver> implements ITou
                         isDisallowIntercept = false;
                     }
                 } else {
+                    //上下滑动
                     if ((disY > 0 && toRectTop()) || (disY < 0 && toRectBottom())) {
                         isDisallowIntercept = false;
                     }
@@ -181,6 +183,7 @@ public class MatrixHelper extends Observable<TableClickObserver> implements ITou
      */
     private void notifyViewChanged(){
         if(listener != null) {
+            Log.i(MatrixHelper.class.getName(),"notifyViewChanged zoom:"+zoom);
             listener.onTableChanged(zoom, translateX, translateY);
         }
     }
@@ -224,6 +227,7 @@ public class MatrixHelper extends Observable<TableClickObserver> implements ITou
 
                 translateX += distanceX;
                 translateY += distanceY;
+                Log.i(MatrixHelper.class.getName(),"translateX:"+translateX+"--translateY:"+translateY);
                 notifyViewChanged();
             }
             return true;
@@ -242,6 +246,7 @@ public class MatrixHelper extends Observable<TableClickObserver> implements ITou
                 isFling = true;
                 startFilingAnim(false);
             }
+            Log.i(MatrixHelper.class.getName(),"onFling translateX:"+translateX+"--translateY:"+translateY);
 
             return true;
         }

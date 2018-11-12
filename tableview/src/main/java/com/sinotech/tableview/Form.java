@@ -1,15 +1,14 @@
 package com.sinotech.tableview;
 
-import android.graphics.Paint;
-
 import com.bin.david.form.annotation.SmartColumn;
-import com.bin.david.form.data.form.IForm;
 
 public class Form {
+
     private String column1;
     private int column2;
     private int column3;
     private double column4;
+
     private double column5;
     private double column6;
     private double column7;

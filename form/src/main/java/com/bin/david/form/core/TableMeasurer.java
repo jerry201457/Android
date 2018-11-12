@@ -2,6 +2,7 @@ package com.bin.david.form.core;
 
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.util.Log;
 
 import com.bin.david.form.component.IComponent;
 import com.bin.david.form.component.ITableTitle;
@@ -12,6 +13,7 @@ import com.bin.david.form.data.column.Column;
 import com.bin.david.form.data.column.ColumnInfo;
 import com.bin.david.form.data.table.TableData;
 import com.bin.david.form.utils.DrawUtils;
+import com.bin.david.form.utils.LogUtil;
 
 import java.util.List;
 
@@ -43,6 +45,7 @@ public class TableMeasurer<T> {
             int size = tableTitle.getSize();
             tableInfo.setTitleDirection(tableTitle.getDirection());
             tableInfo.setTableTitleSize(size);
+            Log.i(TableMeasurer.class.getName(),"---isReMeasure:"+isReMeasure);
             if (tableTitle.getDirection() == IComponent.TOP ||
                     tableTitle.getDirection() == IComponent.BOTTOM) {
                 int height = size;
@@ -120,8 +123,7 @@ public class TableMeasurer<T> {
         int totalTitleHeight = titleHeight * tableInfo.getMaxLevel();
         int totalHeight = topHeight + totalTitleHeight + totalContentHeight;
         if (tableData.isShowCount()) {
-            int countHeight = DrawUtils.getTextHeight(config.getCountStyle(), paint)
-                    + 2 * config.getVerticalPadding();
+            int countHeight = DrawUtils.getTextHeight(config.getCountStyle(), paint) + 2 * config.getVerticalPadding();
             tableInfo.setCountHeight(countHeight);
             totalHeight += countHeight;
         }
@@ -189,8 +191,7 @@ public class TableMeasurer<T> {
             }
             int width = (int) (Math.max(columnNameWidth, columnWidth + 2 * config.getHorizontalPadding()));
             if (tableData.isShowCount()) {
-                int totalCountWidth = column.getCountFormat() != null ?
-                        (int) paint.measureText(column.getTotalNumString()) : 0;
+                int totalCountWidth = column.getCountFormat() != null ? (int) paint.measureText(column.getTotalNumString()) : 0;
                 width = Math.max(totalCountWidth + 2 * config.getHorizontalPadding(), width);
             }
             width = Math.max(column.getMinWidth(), width);

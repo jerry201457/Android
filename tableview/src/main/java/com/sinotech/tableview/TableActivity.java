@@ -6,6 +6,7 @@ import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,6 +18,8 @@ import com.bin.david.form.data.column.Column;
 import com.bin.david.form.data.column.ColumnInfo;
 import com.bin.david.form.data.format.bg.BaseBackgroundFormat;
 import com.bin.david.form.data.format.bg.BaseCellBackgroundFormat;
+import com.bin.david.form.data.format.grid.BaseAbstractGridFormat;
+import com.bin.david.form.data.format.grid.SimpleGridFormat;
 import com.bin.david.form.data.format.sequence.BaseSequenceFormat;
 import com.bin.david.form.data.format.tip.MultiLineBubbleTip;
 import com.bin.david.form.data.format.title.TitleImageDrawFormat;
@@ -24,6 +27,7 @@ import com.bin.david.form.data.style.FontStyle;
 import com.bin.david.form.data.table.PageTableData;
 import com.bin.david.form.listener.OnColumnClickListener;
 import com.bin.david.form.utils.DensityUtils;
+import com.bin.david.form.utils.LogUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +58,7 @@ public class TableActivity extends AppCompatActivity {
 //        mRefreshLayout.setRefreshFooter(new BallPulseFooter(this).setSpinnerStyle(SpinnerStyle.Scale));
 
         try {
-            initTable(smartTable, getList(22));
+            initTable(smartTable, getList(15));
 //            mRefreshLayout.setOnRefreshListener(new OnRefreshListener() {
 //                @Override
 //                public void onRefresh(RefreshLayout refreshLayout) {
@@ -111,8 +115,7 @@ public class TableActivity extends AppCompatActivity {
             }
         });
 
-        //固定列
-        columnBillDeptName.setFixed(true);
+
         //缩放
         smartTable.setZoom(true);
         //点击事件
@@ -166,6 +169,7 @@ public class TableActivity extends AppCompatActivity {
         columnOrderCount.setAutoCount(true);
         columnItemQty.setAutoCount(true);
         column4.setAutoCount(true);
+        column6.setAutoCount(true);
         //设置是否显示统计总数
         tableData.setShowCount(true);
         columnBillDeptName.setMaxMergeCount(3);
@@ -180,14 +184,22 @@ public class TableActivity extends AppCompatActivity {
         smartTable.getConfig().setYSequenceFormat(new BaseSequenceFormat() {
             @Override
             public String format(Integer integer) {
+                if (integer == tableData.getPageSize() + 2) {
+                    return "合计";
+                }
                 return String.valueOf(integer);
             }
         });
+        //固定列
+        columnBillDeptName.setFixed(true);
+//        columnOrderCount.setFixed(true);
         //设置序列背景色
         TableConfig config = smartTable.getConfig();
+        config.setFixedYSequence(true);
+        config.setShowTableTitle(false);
         config.setYSequenceBackground(new BaseBackgroundFormat(ContextCompat.getColor(getContext(), R.color.color_y_sequence)));
         config.setXSequenceBackground(new BaseBackgroundFormat(ContextCompat.getColor(getContext(), R.color.color_y_sequence)));
-        config.setLeftAndTopBackgroundColor(ContextCompat.getColor(getContext(),R.color.color_red));
+        config.setLeftAndTopBackgroundColor(ContextCompat.getColor(getContext(), R.color.color_red));
         //设置网格线颜色
         config.getContentGridStyle().setColor(ContextCompat.getColor(getContext(), R.color.color_white));
         //设置背景色
@@ -197,7 +209,35 @@ public class TableActivity extends AppCompatActivity {
                 if (cellInfo.row % 2 == 0) {
                     return ContextCompat.getColor(getContext(), R.color.color_gray);
                 }
+//                LogUtil.i("value:"+cellInfo.value+"--row:"+cellInfo.row);
+//                if (cellInfo.value.equals("合计")) {
+//                    return ContextCompat.getColor(getContext(), R.color.color_green);
+//                }
+//                if(cellInfo.row==15){
+//                    return   ContextCompat.getColor(getContext(), R.color.color_red);
+//                }
                 return TableConfig.INVALID_COLOR;
+            }
+        });
+        //合计背景色
+//        config.setCountBackground(new BaseBackgroundFormat(ContextCompat.getColor(getContext(),R.color.color_blue)));
+        //合计网格样色
+        config.setCountBgCellFormat(new BaseCellBackgroundFormat<Column>() {
+            @Override
+            public int getBackGroundColor(Column column) {
+                return ContextCompat.getColor(getContext(),R.color.color_red);
+            }
+        });
+        //网格
+        config.setTableGridFormat(new BaseAbstractGridFormat() {
+            @Override
+            protected boolean isShowVerticalLine(int col, int row, CellInfo cellInfo) {
+                return false;
+            }
+
+            @Override
+            protected boolean isShowHorizontalLine(int col, int row, CellInfo cellInfo) {
+                return false;
             }
         });
         //列标题背景色设置

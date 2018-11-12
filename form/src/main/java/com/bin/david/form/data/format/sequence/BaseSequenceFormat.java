@@ -19,7 +19,7 @@ public abstract class BaseSequenceFormat implements ISequenceFormat{
         Paint paint  = config.getPaint();
         paint.setTextSize(paint.getTextSize()*(config.getZoom()>1?1:config.getZoom()));
         paint.setTextAlign(Paint.Align.CENTER);
-        Log.i(BaseSequenceFormat.class.getName(),"---text:"+format(sequence+1));
+//        Log.i(BaseSequenceFormat.class.getName(),"---text:"+format(sequence+1));
         canvas.drawText(format(sequence+1),rect.centerX(), DrawUtils.getTextCenterY(rect.centerY(),paint) ,paint);
     }
 }
