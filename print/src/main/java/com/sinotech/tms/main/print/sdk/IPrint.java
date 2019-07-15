@@ -18,5 +18,11 @@ public interface IPrint {
 
     boolean print();
 
+    /**
+     * 定位指令
+     * @return
+     */
+    boolean form();
+
     boolean close();
 }

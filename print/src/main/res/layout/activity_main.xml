@@ -8,10 +8,15 @@
     tools:context=".MainActivity">
 
     <Button
-        android:id="@+id/print_btn"
+        android:id="@+id/hanyin_print_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="18sp"
-        android:text="print"/>
-
+        android:text="汉印print"/>
+    <Button
+        android:id="@+id/XT413_print_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        android:text="XT413print"/>
 </LinearLayout>
