@@ -28,7 +28,12 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(intent, 10);
             }
         });
-
+        findViewById(R.id.main_dragLayout_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getBaseContext(),DragLayoutActivity.class));
+            }
+        });
     }
 
     @Override

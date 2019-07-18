@@ -4,7 +4,6 @@ android {
     compileSdkVersion 27
 
 
-
     defaultConfig {
         applicationId "com.sinotech.report.main.draw"
         minSdkVersion 19
