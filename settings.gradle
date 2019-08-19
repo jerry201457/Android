@@ -1,1 +1,1 @@
-include ':app', ':rxjava', ':zxing', ':libcore', ':draw', ':picture', ':task', ':sqlite', ':tableview', ':form', ':refresh', ':autosize', ':kotlin', ':speech', ':print', ':ocr'
+include ':app', ':rxjava',':libcore', ':draw', ':picture', ':task', ':sqlite', ':refresh', ':autosize', ':speech', ':print', ':ocr'

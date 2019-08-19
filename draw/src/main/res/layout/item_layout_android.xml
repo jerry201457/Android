@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:background="#fffaaa"
+    android:id="@+id/item_layout_root_layout"
+    android:gravity="center"
+    android:layout_height="200dp">
+<TextView
+    android:id="@+id/item_layout_android_tv"
+    android:layout_width="wrap_content"
+    android:text="test"
+    android:layout_height="wrap_content" />
+</LinearLayout>

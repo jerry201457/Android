@@ -31,7 +31,13 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.main_dragLayout_btn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getBaseContext(),DragLayoutActivity.class));
+                startActivity(new Intent(getBaseContext(), DragLayoutActivity.class));
+            }
+        });
+        findViewById(R.id.main_nianxing_btn).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getBaseContext(), ScrollLayoutActivity.class));
             }
         });
     }
@@ -42,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
         switch (requestCode) {
             case 10:
                 if (resultCode == 100) {
-                    Log.i("---","---100");
+                    Log.i("---", "---100");
                     Glide.with(getContext()).load(SignActivity.PATH)
                             .skipMemoryCache(true)
                             .diskCacheStrategy(DiskCacheStrategy.NONE)

@@ -25,4 +25,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="可拖拽layout"/>
+    <Button
+        android:id="@+id/main_nianxing_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="支付宝全部应用粘性布局"/>
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 </LinearLayout>
